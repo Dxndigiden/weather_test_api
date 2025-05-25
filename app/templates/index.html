@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+</head>
+<body>
+    <h1>Узнай погоду</h1>
+    <form action="/weather" method="post">
+        <label for="city">Город:</label>
+        <input type="text" id="city" name="city" required>
+        <button type="submit">Показать</button>
+    </form>
+
+    {% if city %}
+        <h2>Результат:</h2>
+        <p>{{ result }}</p>
+    {% endif %}
+</body>
+</html>
