@@ -1,19 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang='ru'>
 <head>
-    <title>Weather App</title>
+    <meta charset='UTF-8'>
+    <title>Прогноз погоды</title>
 </head>
 <body>
-    <h1>Узнай погоду</h1>
-    <form action="/weather" method="post">
-        <label for="city">Город:</label>
-        <input type="text" id="city" name="city" required>
-        <button type="submit">Показать</button>
+    <h1>Прогноз погоды</h1>
+
+    <form method='post'>
+        <label for='city'>Город:</label>
+        <input type='text' name='city' id='city' required>
+        <button type='submit'>Узнать</button>
     </form>
 
     {% if city %}
-        <h2>Результат:</h2>
-        <p>{{ result }}</p>
+        <h2>Погода в городе {{ city|capitalize }}</h2>
+        <ul>
+            {% for item in forecast %}
+                <li>
+                    {{ item.time }} — {{ item.temp }}°C
+                </li>
+            {% endfor %}
+        </ul>
     {% endif %}
 </body>
 </html>
