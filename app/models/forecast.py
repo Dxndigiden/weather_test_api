@@ -9,5 +9,5 @@ class Forecast(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     city = Column(String, index=True)
-    day = Column(String, default='today')  # today или tomorrow
+    day = Column(String, default='today')
     created_at = Column(DateTime, default=datetime.utcnow)

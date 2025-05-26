@@ -18,7 +18,7 @@
       <input type="text" class="form-control form-control-lg" name="city"
              placeholder="Введите город" required
              style="min-width: 300px;"
-             value="{{ city or '' }}">
+             value="{{ city }}">
     </div>
     <div class="col-auto">
       <select class="form-select" name="day">
@@ -49,26 +49,16 @@
     <canvas id="forecastChart"></canvas>
     <script>
       const ctx = document.getElementById('forecastChart').getContext('2d');
-      const chart = new Chart(ctx, {
+      new Chart(ctx, {
         type: 'line',
         data: {
           labels: {{ forecast | map(attribute='time') | list | tojson }},
           datasets: [{
             label: 'Температура, °C',
             data: {{ forecast | map(attribute='temp') | list | tojson }},
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
             tension: 0.3,
             fill: true
           }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: false
-            }
-          }
         }
       });
     </script>
@@ -80,15 +70,12 @@
     $('input[name="city"]').autocomplete({
       source: function(request, response) {
         $.ajax({
-          url: "/api/v1/autocomplete",
+          url: '/api/v1/autocomplete',
           data: { q: request.term },
-          success: function(data) {
-            response(data);
-          }
+          success: response
         });
       },
-      minLength: 2,
-      delay: 300
+      minLength: 2
     });
   });
 </script>

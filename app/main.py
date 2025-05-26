@@ -6,7 +6,7 @@ from app.api.router import router as api_router
 from app.db.base import Base
 from app.db.session import engine
 
-app = FastAPI()
+app = FastAPI(docs_url='/swagger')
 
 Base.metadata.create_all(bind=engine)
 

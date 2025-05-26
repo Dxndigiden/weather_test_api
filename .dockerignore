@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*$py.class
+
+# Environment
+.env
+.venv/
+venv/
+ENV/
+env/
+*.env
+
+# macOS
+.DS_Store
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Tests
+htmlcov/
+.tox/
+.nox/
+.coverage
+coverage.xml
+*.cover
+*.log
+.cache
+.pytest_cache/
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Migrations (если alembic генерирует временные файлы)
+alembic/versions/__pycache__/
+
+# Node/npm (если есть фронтенд)
+node_modules/
+dist/
+build/

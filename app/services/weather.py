@@ -5,8 +5,7 @@ async def get_weather(city: str) -> dict:
     """
     Получить прогноз температуры по названию города.
 
-    Используется API Open-Meteo для геокодирования
-    и получения прогноза.
+    Используется API Open-Meteo получения прогноза.
     """
     async with httpx.AsyncClient() as client:
         geo = await client.get(

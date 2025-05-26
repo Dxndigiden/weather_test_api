@@ -7,9 +7,11 @@ router = APIRouter()
 
 
 @router.get('/autocomplete', response_model=List[str])
-async def autocomplete_city(q: str = Query(..., min_length=2)):
+async def autocomplete_city(q: str = Query('', min_length=0)):
     """
     Получить подсказки для ввода города.
     """
+    if len(q) < 2:
+        return []
     suggestions = await get_city_suggestions(q)
     return suggestions
