@@ -12,8 +12,8 @@ router = APIRouter()
 
 
 @router.get('/top', response_class=HTMLResponse)
-def top_cities(request: Request):
-    """Страница с топом запрашиваемых городов."""
+def top_cities_html(request: Request):
+    """HTML-страница с топом самых популярных городов."""
     db: Session = SessionLocal()
     try:
         top = get_top_cities(db)
@@ -21,5 +21,16 @@ def top_cities(request: Request):
             'top.html',
             {'request': request, 'top': top}
         )
+    finally:
+        db.close()
+
+
+@router.get('/api/v1/top')
+def top_cities_api():
+    """API: возвращает топ городов в формате JSON."""
+    db: Session = SessionLocal()
+    try:
+        top = get_top_cities(db)
+        return [{'city': city, 'count': count} for city, count in top]
     finally:
         db.close()

@@ -5,6 +5,9 @@
   <title>Прогноз погоды</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" rel="stylesheet">
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 </head>
 <body class="bg-light">
 <div class="container mt-5">
@@ -12,7 +15,10 @@
 
   <form method="post" class="row gy-2 gx-3 align-items-center mb-4">
     <div class="col-auto">
-      <input type="text" class="form-control" name="city" placeholder="Введите город" required>
+      <input type="text" class="form-control form-control-lg" name="city"
+             placeholder="Введите город" required
+             style="min-width: 300px;"
+             value="{{ city or '' }}">
     </div>
     <div class="col-auto">
       <select class="form-select" name="day">
@@ -29,7 +35,7 @@
     <div class="alert alert-danger">{{ error }}</div>
   {% endif %}
 
-  {% if city %}
+  {% if city and forecast %}
     <h2 class="mb-3">Погода в городе {{ city }}</h2>
 
     <ul class="list-group mb-4">
@@ -68,5 +74,23 @@
     </script>
   {% endif %}
 </div>
+
+<script>
+  $(function() {
+    $('input[name="city"]').autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: "/api/v1/autocomplete",
+          data: { q: request.term },
+          success: function(data) {
+            response(data);
+          }
+        });
+      },
+      minLength: 2,
+      delay: 300
+    });
+  });
+</script>
 </body>
 </html>

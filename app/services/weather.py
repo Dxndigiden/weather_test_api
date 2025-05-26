@@ -38,3 +38,22 @@ async def get_weather(city: str) -> dict:
         )
 
         return weather.json()['hourly']
+
+
+async def get_city_suggestions(query: str) -> list[str]:
+    """
+    Получить подсказки городов по запросу.
+    """
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            'https://geocoding-api.open-meteo.com/v1/search',
+            params={
+                'name': query,
+                'count': 5,
+                'language': 'ru',
+                'format': 'json'
+            }
+        )
+        data = response.json()
+        results = data.get('results', [])
+        return [item['name'] for item in results]
