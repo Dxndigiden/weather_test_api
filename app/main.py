@@ -1,49 +1,18 @@
-from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from datetime import datetime
-import locale
+from fastapi.templating import Jinja2Templates
 
-from app.services.weather import get_weather
-
+from app.api.v1.endpoints import forecast, stats
+from app.db.base import Base
+from app.db.session import engine
 
 app = FastAPI()
+
+Base.metadata.create_all(bind=engine)
+
+app.mount('/static', StaticFiles(directory='app/static'), name='static')
+
 templates = Jinja2Templates(directory='app/templates')
-locale.setlocale(locale.LC_TIME, 'Russian_Russia.1251')
 
-
-@app.get('/', response_class=HTMLResponse)
-async def index(request: Request):
-    return templates.TemplateResponse('index.html', {'request': request})
-
-
-@app.post('/', response_class=HTMLResponse)
-async def get_forecast(request: Request, city: str = Form(...)):
-    forecast_raw = await get_weather(city)
-
-    if not isinstance(forecast_raw['temperature'], list):
-        return templates.TemplateResponse(
-            'index.html',
-            {
-                'request': request,
-                'city': city,
-                'forecast': [],
-                'error': 'Не удалось получить корректный прогноз.'
-            }
-        )
-
-    forecast = []
-    for time_str, temp in zip(forecast_raw['time'], forecast_raw['temperature']):
-        dt = datetime.fromisoformat(time_str)
-        formatted_time = dt.strftime('%a, %d %B в %H:%M')
-        forecast.append({'time': formatted_time, 'temp': temp})
-
-    return templates.TemplateResponse(
-        'index.html',
-        {
-            'request': request,
-            'city': city,
-            'forecast': forecast
-        }
-    )
+app.include_router(forecast.router, prefix='', tags=['Forecast'])
+app.include_router(stats.router, prefix='/stats', tags=['Stats'])

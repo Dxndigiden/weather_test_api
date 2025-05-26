@@ -2,10 +2,21 @@ import httpx
 
 
 async def get_weather(city: str) -> dict:
+    """
+    Получить прогноз температуры по названию города.
+
+    Используется API Open-Meteo для геокодирования
+    и получения прогноза.
+    """
     async with httpx.AsyncClient() as client:
         geo = await client.get(
             'https://geocoding-api.open-meteo.com/v1/search',
-            params={'name': city, 'count': 1, 'language': 'ru', 'format': 'json'}
+            params={
+                'name': city,
+                'count': 1,
+                'language': 'ru',
+                'format': 'json'
+            }
         )
         geo_data = geo.json()
 
@@ -21,13 +32,9 @@ async def get_weather(city: str) -> dict:
                 'latitude': lat,
                 'longitude': lon,
                 'hourly': 'temperature_2m',
-                'forecast_days': 1,
+                'forecast_days': 2,
                 'timezone': 'auto'
             }
         )
 
-        weather_data = weather.json()
-        return {
-            'temperature': weather_data['hourly']['temperature_2m'],
-            'time': weather_data['hourly']['time']
-        }
+        return weather.json()['hourly']
